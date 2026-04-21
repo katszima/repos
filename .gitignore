@@ -1,0 +1,11 @@
+# Файлы с данными
+files.txt
+lab3/files.txt
+
+# Логи и кэш
+lab3/errors.log
+lab3/__pycache__/
+
+# Скрипты, которые не хотите коммитить
+lab3.py
+menu.py
