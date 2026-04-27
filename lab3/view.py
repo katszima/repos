@@ -129,7 +129,7 @@ class HelpWindow:
         self.window = tk.Toplevel()
 
         try:
-            response = requests.get("https://img.freepik.com/free-photo/cute-kitten.jpg")
+            response = requests.get("https://i.pinimg.com/736x/5b/9b/c3/5b9bc30e6670ff4596711db8329ed1c1.jpg")
             img = Image.open(BytesIO(response.content))
             self.photo = ImageTk.PhotoImage(img)
 
@@ -137,7 +137,11 @@ class HelpWindow:
         except:
             tk.Label(self.window, text="Нет картинки").pack()
 
-        tk.Button(self.window, text="Назад", command=self.back).pack()
+        tk.Label(self.window, text=" Это котик ", 
+                font=("Arial", 10), justify="left").pack(pady=10)
+
+        tk.Button(self.window, text="в главное меню", command=self.back,
+                 bg="lightgray", width=20, height=2).pack(pady=20)
 
     def back(self):
         self.window.destroy()
@@ -147,7 +151,10 @@ class HelpWindow:
 class MainApp:
     def __init__(self, root):
         self.root = root
-
+        self.root.title("Главное меню")
+        self.root.geometry("300x300")
+        
+        tk.Label(root, text="ГЛАВНОЕ МЕНЮ", font=("Arial", 16, "bold")).pack(pady=20)
         tk.Button(root, text="Справка", command=self.open_help).pack()
         tk.Button(root, text="Работа", command=self.open_input).pack()
         tk.Button(root, text="Выход", command=self.exit_app).pack()
