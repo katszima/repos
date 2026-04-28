@@ -16,7 +16,7 @@ class CommandError(Exception):
     pass
 
 class FileObject:
-    def __init__(self, name: str, creation_date: datetime, size: int):
+    def __init__(self, name: str, creation_date: datetime, size: int, file_type: str = ""):
         if not name:
             logging.warning(f"Имя файла не может быть пустым")
             raise ValueError("Имя файла не может быть пустым")            
@@ -27,9 +27,10 @@ class FileObject:
         self.name = name
         self.creation_date = creation_date
         self.size = size
+        self.file_type = file_type  # новое поле
 
     def __str__(self):
-        return f'Файл "{self.name}" {self.creation_date.strftime("%Y.%m.%d")} {self.size}'
+        return f'Файл "{self.name}" {self.creation_date.strftime("%Y.%m.%d")} {self.size} {self.file_type}'
 
     def get_field(self, field_name: str):
         if field_name == 'name':
@@ -38,6 +39,8 @@ class FileObject:
             return self.creation_date
         elif field_name == 'size':
             return self.size
+        elif field_name == 'type' or field_name == 'file_type':  # новое поле
+            return self.file_type
         else: 
             raise ValueError(f"Неизвестное поле: {field_name}")
 
@@ -50,7 +53,9 @@ def parse_line(line: str):
         name = parts[1].strip('"')
         date_obj = datetime.strptime(parts[2], "%Y.%m.%d")
         size = int(parts[3])
-        return FileObject(name, date_obj, size)
+
+        file_type = parts[4] if len(parts) >= 5 else ""
+        return FileObject(name, date_obj, size, file_type)
     except Exception as e:
         logging.warning(f"Ошибка парсинга строки: {line.strip()} ({e})")
         raise ParseError(f"Ошибка парсинга строки: {line.strip()} ({e})")
@@ -134,8 +139,9 @@ def execute_add_command(csv_data: str, objects: list) -> tuple[bool, str]:
         name = parts[0]
         date = datetime.strptime(parts[1], "%d.%m.%Y")
         size = int(parts[2])
+        file_type = parts[3] if len(parts) >= 4 else ""  # новое поле
         
-        obj = FileObject(name, date, size)
+        obj = FileObject(name, date, size, file_type)
         objects.append(obj)
         return True, f"Добавлен: {name}"
     except Exception as e:

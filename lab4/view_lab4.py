@@ -1,4 +1,4 @@
-#view.py
+#view_lab4.py
 from datetime import datetime
 import tkinter as tk
 from tkinter import ttk, messagebox
@@ -16,20 +16,22 @@ class FileManagerWindow:
 
         self.window = tk.Toplevel()
         self.window.title("Менеджер файлов")
-        self.window.geometry("600x450")
+        self.window.geometry("700x450")
 
         self.tree = ttk.Treeview(
             self.window,
-            columns=("name", "date", "size"),
+            columns=("name", "date", "size", "type"),
             show="headings"
         )
         self.tree.heading("name", text="Имя файла")
         self.tree.heading("date", text="Дата создания")
         self.tree.heading("size", text="Размер (байт)")
+        self.tree.heading("type", text="Тип файла")
 
         self.tree.column("name", width=200)
         self.tree.column("date", width=100)
         self.tree.column("size", width=100)
+        self.tree.column("type", width=100)
 
         self.tree.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)
 
@@ -79,12 +81,12 @@ class FileManagerWindow:
                 "Все команды выполнены успешно!\n" + "\n".join(report)
             )
 
-    def create_object(self, name, date_str, size_str):
+    def create_object(self, name, date_str, size_str, file_type=""):
         try:
             date = datetime.strptime(date_str, "%Y.%m.%d")
             size = int(size_str)
 
-            obj = modelc_lab4.FileObject(name, date, size)
+            obj = modelc_lab4.FileObject(name, date, size, file_type)
             self.objects.append(obj)
             self.refresh_table()
 
@@ -110,11 +112,16 @@ class FileManagerWindow:
         size_entry = tk.Entry(window)
         size_entry.pack()
 
+        tk.Label(window, text="Тип файла:").pack(pady=5)  
+        type_entry = tk.Entry(window)
+        type_entry.pack()
+
         def on_submit():
             success, error = self.create_object(
                 name_entry.get(),
                 date_entry.get(),
-                size_entry.get()
+                size_entry.get(),
+                type_entry.get()
             )
 
             if success:
@@ -130,10 +137,11 @@ class FileManagerWindow:
             self.tree.delete(row)
 
         for obj in self.objects:
+            file_type = getattr(obj, 'file_type', '')
             self.tree.insert(
                 "",
                 tk.END,
-                values=(obj.name, obj.creation_date.strftime("%Y.%m.%d"), obj.size),
+                values=(obj.name, obj.creation_date.strftime("%Y.%m.%d"), obj.size, file_type),
             )
 
     def delete_object(self):
