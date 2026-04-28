@@ -1,11 +1,16 @@
 # Файлы с данными
 files.txt
 lab3/files.txt
+lab4/files.txt
 
 # Логи и кэш
 lab3/errors.log
 lab3/__pycache__/
+lab4/errors.log
+lab4/__pycache__/
 
 # Скрипты, которые не хотите коммитить
 lab3.py
 menu.py
+lab4/result.txt
+
